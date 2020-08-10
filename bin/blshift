@@ -1,0 +1,34 @@
+#!/usr/bin/env python
+
+"""blshift command line
+"""
+
+import click as cl
+import requests
+from blshift import Shift
+
+
+def get_codes():
+	"""get active codes from orcicorn.com"""
+
+	resp = requests.get('https://shift.orcicorn.com/tags/xbox/index.json', timeout=5)
+	resp.raise_for_status()
+	yield from resp.json()[0].get('codes', [])
+
+@cl.command()
+@cl.option('-u', '--user', required=True, help='shift username')
+@cl.option('-p', '--pass', 'password', required=True, help='shift password')
+def main(user, password):
+	"""redeem all active shift codes for Borderlands"""
+
+	codes = get_codes()
+
+	with Shift(user, password) as shift:
+		for code in codes:
+			success, msg = shift.redeem(code['code'])
+			msg = f"{cl.style('Success', fg='green') if success else cl.style(msg.replace('_', ' ').title(), fg='red')}"
+			cl.echo(f"{cl.style(code['code'], bold=True)} {code['reward']}: {msg}", err=(not success))
+
+if __name__ == '__main__':
+
+	main()
