@@ -16,8 +16,8 @@ def get_codes():
 	yield from resp.json()[0].get('codes', [])
 
 @cl.command()
-@cl.option('-u', '--user', required=True, help='shift username')
-@cl.option('-p', '--pass', 'password', required=True, help='shift password')
+@cl.option('-u', '--user', required=True, help='shift username', envvar='SHIFT_USERNAME')
+@cl.option('-p', '--pass', 'password', required=True, help='shift password', envvar='SHIFT_PASSWORD')
 def main(user, password):
 	"""redeem all active shift codes for Borderlands"""
 

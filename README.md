@@ -12,11 +12,14 @@
 
 ### Usage
 
+Specify the Shift account username/password via the command line options,  
+or using the environment variables: `SHIFT_USERNAME` and `SHIFT_PASSWORD`.
+
 ```bash
 Usage: blshift [OPTIONS]
 
 Options:
-  -u, --user TEXT  username  [required]
-  -p, --pass TEXT  password  [required]
+  -u, --user TEXT  shift username  [required]
+  -p, --pass TEXT  shift password  [required]
   --help           Show this message and exit.
 ```
