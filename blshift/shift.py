@@ -89,6 +89,20 @@ class Shift:
 		except Exception as err:
 			return False, str(err)
 
+	@check_login
+	def info(self, code):
+		"""get details for code"""
+
+		try:
+			resp = self.session.get(f"https://api.2k.com/borderlands/code/{code}/info", timeout=5)
+			resp.raise_for_status()
+			resp = resp.json()
+
+			return next((x for x in resp['entitlement_offer_codes'] if x['offer_service'] == 'xboxlive'), None)
+
+		except Exception:
+			return None
+
 	def logout(self):
 		"""logout and delete session"""
 

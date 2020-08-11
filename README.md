@@ -21,5 +21,13 @@ Usage: blshift [OPTIONS]
 Options:
   -u, --user TEXT  shift username  [required]
   -p, --pass TEXT  shift password  [required]
+  -c, --code TEXT  redeem single shift code, can be used multiple times
   --help           Show this message and exit.
 ```
+
+* Redeem all active codes:  
+`blshift -u username -p password`
+
+* Manually redeem codes:  
+`blshift -u username -p password -c CBCTJ-3TJ3J-C3XBS-9RW3C-TTXX2`  
+_the `-c/--code` option can be used multiple times to redeem several codes_

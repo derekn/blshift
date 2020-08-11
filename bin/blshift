@@ -10,12 +10,16 @@ from blshift import Shift, get_codes
 @cl.command()
 @cl.option('-u', '--user', required=True, help='shift username', envvar='SHIFT_USERNAME')
 @cl.option('-p', '--pass', 'password', required=True, help='shift password', envvar='SHIFT_PASSWORD')
-def main(user, password):
-	"""redeem all active shift codes for Borderlands"""
-
-	codes = get_codes()
+@cl.option('-c', '--code', 'codes', help='redeem single shift code, can be used multiple times', multiple=True)
+def main(user, password, codes=None):
+	"""redeem all active or individual shift codes for Borderlands"""
 
 	with Shift(user, password) as shift:
+		if codes:
+			codes = [{'code': x['code'], 'reward': x['offer_title_text']} for x in (shift.info(xx) for xx in codes) if x]
+		else:
+			codes = get_codes()
+
 		for code in codes:
 			success, msg = shift.redeem(code['code'])
 			msg = f"{cl.style('Success', fg='green') if success else cl.style(msg.replace('_', ' ').title(), fg='red')}"
