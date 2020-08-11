@@ -4,16 +4,8 @@
 """
 
 import click as cl
-import requests
-from blshift import Shift
+from blshift import Shift, get_codes
 
-
-def get_codes():
-	"""get active codes from orcicorn.com"""
-
-	resp = requests.get('https://shift.orcicorn.com/tags/xbox/index.json', timeout=5)
-	resp.raise_for_status()
-	yield from resp.json()[0].get('codes', [])
 
 @cl.command()
 @cl.option('-u', '--user', required=True, help='shift username', envvar='SHIFT_USERNAME')

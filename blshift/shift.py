@@ -12,6 +12,13 @@ from .__version__ import __version__
 class ShiftException(Exception):
 	pass
 
+def get_codes():
+	"""get active codes from orcicorn.com"""
+
+	resp = requests.get('https://shift.orcicorn.com/tags/xbox/index.json', timeout=5)
+	resp.raise_for_status()
+	yield from resp.json()[0].get('codes', [])
+
 def check_login(func):
 	@wraps(func)
 	def wrapper(self, *args, **kwargs):
