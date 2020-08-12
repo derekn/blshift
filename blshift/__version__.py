@@ -1,4 +1,4 @@
 __author__ = 'Derek Nicol <1420397+derekn@users.noreply.github.com>'
-__version__ = '1.1.0'
+__version__ = '1.3.0'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2020 Derek Nicol'

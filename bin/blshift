@@ -3,9 +3,18 @@
 """blshift command line
 """
 
+from multiprocessing.pool import ThreadPool
+
 import click as cl
 from blshift import Shift, get_codes
 
+
+def redeem_code_init(shift):
+	redeem_code.shift = shift
+
+def redeem_code(code):
+	success, msg = redeem_code.shift.redeem(code['code'])
+	return code, success, msg
 
 @cl.command()
 @cl.option('-u', '--user', required=True, help='shift username', envvar='SHIFT_USERNAME')
@@ -20,10 +29,10 @@ def main(user, password, codes=None):
 		else:
 			codes = get_codes()
 
-		for code in codes:
-			success, msg = shift.redeem(code['code'])
-			msg = f"{cl.style('Success', fg='green') if success else cl.style(msg.replace('_', ' ').title(), fg='red')}"
-			cl.echo(f"{cl.style(code['code'], bold=True)} {code['reward']}: {msg}", err=(not success))
+		with ThreadPool(8, redeem_code_init, (shift,)) as pool:
+			for code, success, msg in pool.imap_unordered(redeem_code, codes):
+				msg = f"{cl.style('Success', fg='green') if success else cl.style(msg.replace('_', ' ').title(), fg='red')}"
+				cl.echo(f"{cl.style(code['code'], bold=True)} {code['reward']}: {msg}", err=(not success))
 
 if __name__ == '__main__':
 
