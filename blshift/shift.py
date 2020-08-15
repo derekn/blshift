@@ -1,6 +1,7 @@
 """shift api wrapper class
 """
 
+from enum import Enum
 from functools import wraps
 from time import sleep
 
@@ -11,13 +12,6 @@ from .__version__ import __version__
 
 class ShiftException(Exception):
 	pass
-
-def get_codes():
-	"""get active codes from orcicorn.com"""
-
-	resp = requests.get('https://shift.orcicorn.com/tags/xbox/index.json', timeout=5)
-	resp.raise_for_status()
-	yield from resp.json()[0].get('codes', [])
 
 def check_login(func):
 	@wraps(func)
@@ -31,7 +25,14 @@ def check_login(func):
 class Shift:
 	"""borderlands shift api wrapper"""
 
-	def __init__(self, user=None, passwd=None):
+	class Platforms(Enum):
+		XBOX = 'xboxlive'
+		PLAYSTATION = 'psn'
+		STEAM = 'steam'
+		NINTENDO = 'nintendo'
+
+	def __init__(self, platform, user=None, passwd=None):
+		self.platform = self.Platforms(platform)
 		self.session = requests.Session()
 		self.session.headers.update({
 			'User-Agent': f"blshift/{__version__}",
@@ -64,11 +65,19 @@ class Shift:
 		return resp.json()
 
 	@check_login
+	def get_codes(self):
+		"""get active codes from orcicorn.com"""
+
+		resp = requests.get(f"https://shift.orcicorn.com/tags/{self.platform.name}/index.json", timeout=5)
+		resp.raise_for_status()
+		yield from resp.json()[0].get('codes', [])
+
+	@check_login
 	def redeem(self, code):
 		"""redeem shift code"""
 
 		resp = self.session.post(
-			f"https://api.2k.com/borderlands/code/{code}/redeem/xboxlive",
+			f"https://api.2k.com/borderlands/code/{code}/redeem/{self.platform.value}",
 			headers={'Referer': 'https://borderlands.com/en-US/profile/'},
 			timeout=5
 		)
@@ -98,7 +107,7 @@ class Shift:
 			resp.raise_for_status()
 			resp = resp.json()
 
-			return next((x for x in resp['entitlement_offer_codes'] if x['offer_service'] == 'xboxlive'), None)
+			return next((x for x in resp['entitlement_offer_codes'] if x['offer_service'] == self.platform.value), None)
 
 		except Exception:
 			return None

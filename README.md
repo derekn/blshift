@@ -12,22 +12,26 @@
 
 ### Usage
 
-Specify the Shift account username/password via the command line options,  
-or using the environment variables: `SHIFT_USERNAME` and `SHIFT_PASSWORD`.
+Specify the Shift account username/password and platform (Xbox/PS/etc.) via the command line options,  
+or using the environment variables: `SHIFT_USERNAME`, `SHIFT_PASSWORD` and `SHIFT_PLATFORM`.
 
 ```bash
 Usage: blshift [OPTIONS]
 
 Options:
-  -u, --user TEXT  shift username  [required]
-  -p, --pass TEXT  shift password  [required]
-  -c, --code TEXT  redeem single shift code, can be used multiple times
-  --help           Show this message and exit.
+  -u, --user TEXT                 shift username  [required]
+  -p, --pass TEXT                 shift password  [required]
+  -l, --platform [XBOX|PLAYSTATION|STEAM|NINTENDO]
+                                  redemption platform  [required]
+  -c, --code TEXT                 redeem single shift code, can be used
+                                  multiple times
+
+  --help                          Show this message and exit.
 ```
 
 * Redeem all active codes:  
-`blshift -u username -p password`
+`blshift -u username -p password -l xbox`
 
 * Manually redeem codes:  
-`blshift -u username -p password -c CBCTJ-3TJ3J-C3XBS-9RW3C-TTXX2`  
+`blshift -u username -p password -l xbox -c CBCTJ-3TJ3J-C3XBS-9RW3C-TTXX2`  
 _the `-c/--code` option can be used multiple times to redeem several codes_

@@ -6,7 +6,7 @@
 from multiprocessing.pool import ThreadPool
 
 import click as cl
-from blshift import Shift, get_codes
+from blshift import Shift
 
 
 def redeem_code_init(shift):
@@ -19,15 +19,19 @@ def redeem_code(code):
 @cl.command()
 @cl.option('-u', '--user', required=True, help='shift username', envvar='SHIFT_USERNAME')
 @cl.option('-p', '--pass', 'password', required=True, help='shift password', envvar='SHIFT_PASSWORD')
+@cl.option('-l', '--platform', required=True, help='redemption platform', envvar='SHIFT_PLATFORM',
+	type=cl.Choice([x.name for x in Shift.Platforms], case_sensitive=False))
 @cl.option('-c', '--code', 'codes', help='redeem single shift code, can be used multiple times', multiple=True)
-def main(user, password, codes=None):
+def main(user, password, platform, codes=None):
 	"""redeem all active or individual shift codes for Borderlands"""
 
-	with Shift(user, password) as shift:
+	platform = Shift.Platforms[platform]
+
+	with Shift(platform, user, password) as shift:
 		if codes:
 			codes = [{'code': x['code'], 'reward': x['offer_title_text']} for x in (shift.info(xx) for xx in codes) if x]
 		else:
-			codes = get_codes()
+			codes = shift.get_codes()
 
 		with ThreadPool(8, redeem_code_init, (shift,)) as pool:
 			for code, success, msg in pool.imap_unordered(redeem_code, codes):
