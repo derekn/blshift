@@ -7,6 +7,7 @@ from multiprocessing.pool import ThreadPool
 
 import click as cl
 from blshift import Shift
+from blshift.__version__ import __version__
 
 
 def redeem_code_init(shift):
@@ -16,7 +17,8 @@ def redeem_code(code):
 	success, msg = redeem_code.shift.redeem(code['code'])
 	return code, success, msg
 
-@cl.command()
+@cl.command(no_args_is_help=True, epilog='https://github.com/derekn/blshift')
+@cl.version_option(version=__version__, message="%(prog)s version %(version)s, Copyright 2020 Derek Nicol")
 @cl.option('-u', '--user', required=True, help='shift username', envvar='SHIFT_USERNAME')
 @cl.option('-p', '--pass', 'password', required=True, help='shift password', envvar='SHIFT_PASSWORD')
 @cl.option('-l', '--platform', required=True, help='redemption platform', envvar='SHIFT_PLATFORM',

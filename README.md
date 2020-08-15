@@ -19,6 +19,7 @@ or using the environment variables: `SHIFT_USERNAME`, `SHIFT_PASSWORD` and `SHIF
 Usage: blshift [OPTIONS]
 
 Options:
+  --version                       Show the version and exit.
   -u, --user TEXT                 shift username  [required]
   -p, --pass TEXT                 shift password  [required]
   -l, --platform [XBOX|PLAYSTATION|STEAM|NINTENDO]
