@@ -10,7 +10,7 @@ setup(
 	version=about['__version__'],
 	author='Derek Nicol',
 	author_email='1420397+derekn@users.noreply.github.com',
-	url='https://github.com/derekn/blshift.git',
+	url=about['__url__'],
 	license=about['__license__'],
 	packages=find_packages(),
 	python_requires='>=3.7.0',

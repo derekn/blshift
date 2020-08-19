@@ -20,14 +20,14 @@ Usage: blshift [OPTIONS]
 
 Options:
   --version                       Show the version and exit.
-  -u, --user TEXT                 shift username  [required]
-  -p, --pass TEXT                 shift password  [required]
+  -u, --user TEXT                 shift username.  [required]
+  -p, --pass TEXT                 shift password.  [required]
   -l, --platform [XBOX|PLAYSTATION|STEAM|NINTENDO]
-                                  redemption platform  [required]
+                                  redemption platform.  [required]
   -c, --code TEXT                 redeem single shift code, can be used
-                                  multiple times
+                                  multiple times.
 
-  --no-cache                      disable shift code caching
+  --no-cache                      disable shift code caching.
   --help                          Show this message and exit.
 ```
 

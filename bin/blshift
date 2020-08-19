@@ -9,7 +9,7 @@ from tempfile import gettempdir
 
 import click as cl
 from blshift import Shift
-from blshift.__version__ import __version__
+from blshift.__version__ import __url__, __version__
 from diskcache import Cache
 
 
@@ -20,14 +20,14 @@ def redeem_code(code):
 	success, msg = redeem_code.shift.redeem(code['code'])
 	return code, success, msg
 
-@cl.command(no_args_is_help=True, epilog='https://github.com/derekn/blshift')
-@cl.version_option(version=__version__, message="%(prog)s version %(version)s, Copyright 2020 Derek Nicol")
-@cl.option('-u', '--user', required=True, help='shift username', envvar='SHIFT_USERNAME')
-@cl.option('-p', '--pass', 'password', required=True, help='shift password', envvar='SHIFT_PASSWORD')
-@cl.option('-l', '--platform', required=True, help='redemption platform', envvar='SHIFT_PLATFORM',
-	type=cl.Choice([x.name for x in Shift.Platforms], case_sensitive=False))
-@cl.option('-c', '--code', 'codes', help='redeem single shift code, can be used multiple times', multiple=True)
-@cl.option('--no-cache', is_flag=True, default=False, help='disable shift code caching')
+@cl.command(no_args_is_help=True, epilog=__url__)
+@cl.version_option(version=__version__, message=f"%(prog)s version %(version)s, Copyright 2020 Derek Nicol\n{__url__}")
+@cl.option('-u', '--user', required=True, help='shift username.', envvar='SHIFT_USERNAME')
+@cl.option('-p', '--pass', 'password', required=True, help='shift password.', envvar='SHIFT_PASSWORD')
+@cl.option('-l', '--platform', required=True, help='redemption platform.', envvar='SHIFT_PLATFORM',
+           type=cl.Choice([x.name for x in Shift.Platforms], case_sensitive=False))
+@cl.option('-c', '--code', 'codes', help='redeem single shift code, can be used multiple times.', multiple=True)
+@cl.option('--no-cache', is_flag=True, default=False, help='disable shift code caching.')
 def main(user, password, platform, codes=None, no_cache=False):
 	"""redeem all active or individual shift codes for Borderlands"""
 
@@ -39,7 +39,7 @@ def main(user, password, platform, codes=None, no_cache=False):
 
 	with Shift(platform, user, password) as shift:
 		if codes:
-			codes = [{'code': x['code'], 'reward': x['offer_title_text']} for x in (shift.info(xx) for xx in codes) if x]
+			codes = [{'code': x['code'], 'reward': x['offer_title_text']} for x in (shift.info(y) for y in codes) if x]
 		else:
 			codes = shift.get_codes()
 
