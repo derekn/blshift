@@ -17,7 +17,7 @@ def check_login(func):
 	@wraps(func)
 	def wrapper(self, *args, **kwargs):
 		if 'X-SESSION' not in self.session.headers:
-			raise ShiftException('not logged in')
+			raise ShiftException('Not logged in.')
 		return func(self, *args, **kwargs)
 
 	return wrapper
@@ -81,6 +81,11 @@ class Shift:
 			headers={'Referer': 'https://borderlands.com/en-US/profile/'},
 			timeout=5
 		)
+		if resp.status_code == requests.codes.not_found:
+			return False, 'NO_SUCH_CODE'
+		if resp.status_code == requests.codes.precondition_failed:
+			raise ShiftException('Rate limit exceeded, try again later.')
+			return False, 'RATE_LIMIT_EXCEEDED'
 		resp.raise_for_status()
 		resp = resp.json()
 
@@ -93,7 +98,7 @@ class Shift:
 				timeout=5
 			)
 			resp = resp.json()
-			return resp.get('success', False), next(iter(resp.get('errors', [])), None)
+			return resp.get('success', False), next(iter(resp.get('errors', [])), 'UNKOWN_ERROR')
 
 		except Exception as err:
 			return False, str(err)
