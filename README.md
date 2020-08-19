@@ -27,6 +27,7 @@ Options:
   -c, --code TEXT                 redeem single shift code, can be used
                                   multiple times
 
+  --no-cache                      disable shift code caching
   --help                          Show this message and exit.
 ```
 

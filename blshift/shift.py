@@ -70,7 +70,7 @@ class Shift:
 
 		resp = requests.get(f"https://shift.orcicorn.com/tags/{self.platform.name}/index.json", timeout=5)
 		resp.raise_for_status()
-		yield from resp.json()[0].get('codes', [])
+		return resp.json()[0].get('codes', [])
 
 	@check_login
 	def redeem(self, code):

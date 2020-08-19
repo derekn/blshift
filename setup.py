@@ -17,7 +17,8 @@ setup(
 	install_requires=[
 		'requests',
 		'simplejson',
-		'click'
+		'click',
+		'diskcache'
 	],
 	scripts=['bin/blshift']
 )
