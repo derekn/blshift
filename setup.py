@@ -18,7 +18,8 @@ setup(
 		'requests',
 		'simplejson',
 		'click',
-		'diskcache'
+		'diskcache',
+		'colorama'
 	],
 	scripts=['bin/blshift']
 )

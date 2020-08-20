@@ -11,6 +11,7 @@ requests = "*"
 simplejson = "*"
 click = "*"
 diskcache = "*"
+colorama = "*"
 
 [requires]
 python_version = "3.7"

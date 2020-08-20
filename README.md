@@ -6,9 +6,23 @@
 
 [Shift](https://shift.gearboxsoftware.com/) code automated redeemer for [Borderlands](https://borderlands.com/) using lists from [Orcicorn](https://shift.orcicorn.com/).
 
+### Features
+
+-	cross-platform written in python.
+-	automatically pulls active codes from [shift.orcicorn.com](https://shift.orcicorn.com/).
+-	codes can also be manually redeemed.
+-	works for all Borderlands (3, 2, the pre-sequel), and all platforms (Xbox, PSN, Steam, Nintendo).
+-	runs on command line so can be easily scripted or put in a [cron](https://www.man7.org/linux/man-pages/man5/crontab.5.html) job to run on a schedule.
+-	supports multiple shift accounts on different platforms.
+-	open-source so you can be assured your logins are safe and secure.
+-	provides a reusable package to use in your own python scripts.
+
 ### Install
 
 `pip install git+ssh://git@github.com/derekn/blshift.git`
+
+or using [pipenv](https://github.com/pypa/pipenv):  
+`pipenv install git+ssh://git@github.com/derekn/blshift.git#egg=blshift`
 
 ### Usage
 
@@ -37,3 +51,12 @@ Options:
 * Manually redeem codes:  
 `blshift -u username -p password -l xbox -c CBCTJ-3TJ3J-C3XBS-9RW3C-TTXX2`  
 _the `-c/--code` option can be used multiple times to redeem several codes_
+
+* Using environment variables to redeem on multiple platforms  
+```bash
+export SHIFT_USERNAME='user@email.com'
+export SHIFT_PASSWORD='abc123'
+
+blshift --platform xbox
+blshift --platform playstation
+```
