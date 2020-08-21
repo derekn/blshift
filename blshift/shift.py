@@ -6,12 +6,13 @@ from functools import wraps
 from time import sleep
 
 import requests
+from requests.exceptions import HTTPError
 
 from .__version__ import __version__
 
 
 class ShiftException(Exception):
-	pass
+	"""blshift exception"""
 
 def check_login(func):
 	@wraps(func)
@@ -59,6 +60,8 @@ class Shift:
 			json={'username': user, 'password': passwd},
 			timeout=5
 		)
+		if resp.status_code == requests.codes.forbidden:
+			raise HTTPError('Unsuccessful login', response=resp)
 		resp.raise_for_status()
 
 		self.session.headers.update({'X-SESSION': resp.headers['X-SESSION-SET']})
@@ -84,8 +87,7 @@ class Shift:
 		if resp.status_code == requests.codes.not_found:
 			return False, 'NO_SUCH_CODE'
 		if resp.status_code == requests.codes.precondition_failed:
-			raise ShiftException('Rate limit exceeded, try again later.')
-			return False, 'RATE_LIMIT_EXCEEDED'
+			raise ShiftException('Rate limit exceeded, try again later')
 		resp.raise_for_status()
 		resp = resp.json()
 
