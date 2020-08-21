@@ -6,7 +6,9 @@ from functools import wraps
 from time import sleep
 
 import requests
+from requests.adapters import HTTPAdapter
 from requests.exceptions import HTTPError
+from requests.packages.urllib3.util.retry import Retry
 
 from .__version__ import __version__
 
@@ -33,6 +35,13 @@ class Shift:
 		NINTENDO = 'nintendo'
 
 	def __init__(self, platform, user=None, passwd=None):
+		retry = Retry(
+			total=3,
+			status_forcelist=(429, 500, 502, 503, 504),
+			backoff_factor=5
+		)
+		adapter = HTTPAdapter(max_retries=retry)
+
 		self.platform = self.Platforms(platform)
 		self.session = requests.Session()
 		self.session.headers.update({
@@ -41,6 +50,8 @@ class Shift:
 			'Pragma': 'no-cache',
 			'Cache-Control': 'no-cache'
 		})
+		self.session.mount("http://", adapter)
+		self.session.mount("https://", adapter)
 
 		if user and passwd:
 			self.login(user, passwd)
