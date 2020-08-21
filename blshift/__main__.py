@@ -42,7 +42,10 @@ def main(user, password, platform, codes=None, no_cache=False):
 			else:
 				codes = shift.get_codes()
 
-			width = max(len(x['reward']) + len(x['code']) for x in codes)
+			if redeemed.issuperset(x['code'] for x in codes):
+				cl.echo('No new codes found', err=True)
+				raise SystemExit(0)
+			width = max(len(x['reward']) + len(x['code']) for x in codes if x['code'] not in redeemed)
 
 			try:
 				with ThreadPool(8, redeem_code_init, (shift,)) as pool:
