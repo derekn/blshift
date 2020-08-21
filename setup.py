@@ -13,7 +13,7 @@ setup(
 	url=about['__url__'],
 	license=about['__license__'],
 	packages=find_packages(),
-	python_requires='>=3.7.0',
+	python_requires='>=3.6.0',
 	install_requires=[
 		'requests',
 		'simplejson',

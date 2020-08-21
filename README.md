@@ -1,6 +1,6 @@
 # BL-Shift
 
-![Python >=3.7](https://img.shields.io/badge/python->=3.7-blue.svg)
+![Python >=3.6](https://img.shields.io/badge/python->=3.6-blue.svg)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![GitHub last commit](https://img.shields.io/github/last-commit/derekn/blshift/master.svg)](https://github.com/derekn/blshift/commits/master)
 
@@ -19,10 +19,10 @@
 
 ### Install
 
-`pip install git+ssh://git@github.com/derekn/blshift.git`
+`pip install git+https://github.com/derekn/blshift.git`
 
 or using [pipenv](https://github.com/pypa/pipenv):  
-`pipenv install git+ssh://git@github.com/derekn/blshift.git#egg=blshift`
+`pipenv install git+https://github.com/derekn/blshift.git#egg=blshift`
 
 ### Usage
 

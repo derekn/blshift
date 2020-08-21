@@ -13,7 +13,7 @@ diskcache = "*"
 colorama = "*"
 
 [requires]
-python_version = "3.7"
+python_version = "3"
 
 [scripts]
 blshift = "python -m blshift"
