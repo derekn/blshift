@@ -4,7 +4,6 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-blshift = {editable = true, path = "."}
 
 [packages]
 requests = "*"
@@ -17,4 +16,4 @@ colorama = "*"
 python_version = "3.7"
 
 [scripts]
-blshift = "blshift"
+blshift = "python -m blshift"

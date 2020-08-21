@@ -21,5 +21,7 @@ setup(
 		'diskcache',
 		'colorama'
 	],
-	scripts=['bin/blshift']
+	entry_points={
+		'console_scripts': ['blshift=blshift.__main__:main']
+	}
 )
