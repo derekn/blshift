@@ -29,10 +29,12 @@ class Shift:
 	"""borderlands shift api wrapper"""
 
 	class Platforms(Enum):
-		XBOX = 'xboxlive'
-		PLAYSTATION = 'psn'
-		STEAM = 'steam'
+		EPIC = 'epic'
 		NINTENDO = 'nintendo'
+		PLAYSTATION = 'psn'
+		STADIA = 'stadia'
+		STEAM = 'steam'
+		XBOX = 'xboxlive'
 
 	def __init__(self, platform, user=None, passwd=None):
 		retry = Retry(
@@ -82,7 +84,7 @@ class Shift:
 	def get_codes(self):
 		"""get active codes from orcicorn.com"""
 
-		resp = requests.get(f"https://shift.orcicorn.com/tags/{self.platform.name}/index.json", timeout=5)
+		resp = requests.get(f"https://shift.orcicorn.com/tags/{self.platform.name.lower()}/index.json", timeout=5)
 		resp.raise_for_status()
 		return resp.json()[0].get('codes', [])
 

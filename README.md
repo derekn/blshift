@@ -8,12 +8,12 @@
 
 ### Features
 
--	cross-platform written in python.
+-	works for all Borderlands (3, 2, the Pre-Sequel, GOTY), and all platforms (Xbox, PSN, Steam, Nintendo, Stadia, and Epic).
 -	automatically pulls active codes from [shift.orcicorn.com](https://shift.orcicorn.com/).
 -	codes can also be manually redeemed.
--	works for all Borderlands (3, 2, the pre-sequel), and all platforms (Xbox, PSN, Steam, Nintendo).
--	runs on command line so can be easily scripted or put in a [cron](https://www.man7.org/linux/man-pages/man5/crontab.5.html) job to run on a schedule.
 -	supports multiple shift accounts on different platforms.
+-	cross-platform written in python.
+-	runs on command line so can be easily scripted or put in a [cron](https://www.man7.org/linux/man-pages/man5/crontab.5.html) job to run on a schedule.
 -	open-source so you can be assured your logins are safe and secure.
 -	provides a reusable package to use in your own python scripts.
 
@@ -36,7 +36,7 @@ Options:
   --version                       Show the version and exit.
   -u, --user TEXT                 shift username.  [required]
   -p, --pass TEXT                 shift password.  [required]
-  -l, --platform [XBOX|PLAYSTATION|STEAM|NINTENDO]
+  -l, --platform [EPIC|NINTENDO|PLAYSTATION|STADIA|STEAM|XBOX]
                                   redemption platform.  [required]
   -c, --code TEXT                 redeem single shift code, can be used
                                   multiple times.
