@@ -1,6 +1,7 @@
 """blshift command line
 """
 
+import sys
 from multiprocessing.pool import ThreadPool
 from pathlib import Path
 from tempfile import gettempdir
@@ -45,7 +46,8 @@ def main(user, password, platform, codes, no_cache, cache_dir):
 				codes = shift.get_codes()
 
 			if redeemed.issuperset(x['code'] for x in codes):
-				cl.echo('No new codes found', err=True)
+				if sys.stdout.isatty():
+					cl.echo('No new codes found')
 				raise SystemExit(0)
 			width = max(len(x['reward']) + len(x['code']) for x in codes if x['code'] not in redeemed)
 
