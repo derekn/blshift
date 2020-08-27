@@ -42,6 +42,7 @@ Options:
                                   multiple times.
 
   --no-cache                      disable shift code caching.
+  --cache-dir DIRECTORY           cache directory, default system temp.
   --help                          Show this message and exit.
 ```
 

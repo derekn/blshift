@@ -26,14 +26,16 @@ def redeem_code(code):
            type=cl.Choice([x.name for x in Shift.Platforms], case_sensitive=False))
 @cl.option('-c', '--code', 'codes', help='redeem single shift code, can be used multiple times.', multiple=True)
 @cl.option('--no-cache', is_flag=True, default=False, help='disable shift code caching.')
-def main(user, password, platform, codes, no_cache):
+@cl.option('--cache-dir', default=gettempdir(), help='cache directory, default system temp.', envvar='SHIFT_CACHE_DIR',
+           type=cl.Path(exists=True, file_okay=False, writable=True))
+def main(user, password, platform, codes, no_cache, cache_dir):
 	"""redeem all active or individual shift codes for Borderlands"""
 
 	no_cache = True if codes else no_cache
 	platform = Shift.Platforms[platform]
 
 	try:
-		cache = Cache(str(Path(gettempdir(), 'blshift.cache')), eviction_policy='none') if not no_cache else {}
+		cache = Cache(str(Path(cache_dir, 'blshift.cache')), eviction_policy='none') if not no_cache else {}
 		redeemed = cache.get(user, set())
 
 		with Shift(platform, user, password) as shift:
