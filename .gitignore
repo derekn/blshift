@@ -4,6 +4,5 @@
 /*.egg-info
 /.venv
 /build
-/Pipfile.lock
 __pycache__
 Thumbs.db
