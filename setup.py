@@ -19,7 +19,8 @@ setup(
 		'simplejson',
 		'click',
 		'diskcache',
-		'colorama'
+		'colorama',
+		'beautifulsoup4'
 	],
 	entry_points={
 		'console_scripts': ['blshift=blshift.__main__:main']

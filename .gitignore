@@ -4,5 +4,6 @@
 /*.egg-info
 /.venv
 /build
+/dist
 __pycache__
 Thumbs.db
