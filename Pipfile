@@ -11,6 +11,7 @@ simplejson = "*"
 click = "*"
 diskcache = "*"
 colorama = "*"
+beautifulsoup4 = "*"
 
 [requires]
 python_version = "3"

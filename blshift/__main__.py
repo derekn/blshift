@@ -1,4 +1,4 @@
-"""blshift command line
+"""Blshift command line
 """
 
 import sys
@@ -41,7 +41,8 @@ def main(user, password, platform, codes, no_cache, cache_dir):
 
 		with Shift(platform, user, password) as shift:
 			if codes:
-				codes = [{'code': x['code'], 'reward': x['offer_title_text']} for x in (shift.info(y) for y in codes) if x]
+				# codes = [{'code': x['code'], 'reward': x['offer_title_text']} for x in (shift.info(y) for y in codes) if x]
+				codes = [{'code': x, 'reward': ''} for x in codes]
 			else:
 				codes = shift.get_codes()
 

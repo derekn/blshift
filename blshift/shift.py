@@ -1,4 +1,4 @@
-"""shift api wrapper class
+"""Shift api wrapper class
 """
 
 from enum import Enum
@@ -6,6 +6,7 @@ from functools import wraps
 from time import sleep
 
 import requests
+from bs4 import BeautifulSoup
 from requests.adapters import HTTPAdapter
 from requests.exceptions import HTTPError
 from requests.packages.urllib3.util.retry import Retry
@@ -19,8 +20,8 @@ class ShiftException(Exception):
 def check_login(func):
 	@wraps(func)
 	def wrapper(self, *args, **kwargs):
-		if 'X-SESSION' not in self.session.headers:
-			raise ShiftException('Not logged in.')
+		if '_session_id' not in self.session.cookies:
+			raise ShiftException('Not logged in')
 		return func(self, *args, **kwargs)
 
 	return wrapper
@@ -48,7 +49,7 @@ class Shift:
 		self.session = requests.Session()
 		self.session.headers.update({
 			'User-Agent': f"blshift/{__version__}",
-			'Origin': 'https://borderlands.com',
+			'Origin': 'https://shift.gearboxsoftware.com',
 			'Pragma': 'no-cache',
 			'Cache-Control': 'no-cache'
 		})
@@ -64,23 +65,38 @@ class Shift:
 	def __exit__(self, exc_type, exc_val, exc_tb):
 		self.logout()
 
+	def get_auth_token(self):
+		"""get csrf authentication token"""
+
+		resp = self.session.get('https://shift.gearboxsoftware.com/home', timeout=5)
+		resp.raise_for_status()
+
+		soup = BeautifulSoup(resp.text, 'html.parser')
+		token = soup.select_one('input[name="authenticity_token"]')
+
+		return token['value']
+
 	def login(self, user, passwd):
 		"""authenticate"""
 
 		resp = self.session.post(
-			'https://api.2k.com/borderlands/users/authenticate',
-			headers={'Referer': 'https://borderlands.com/en-US/'},
-			json={'username': user, 'password': passwd},
+			'https://shift.gearboxsoftware.com/sessions',
+			headers={'Referer': 'https://shift.gearboxsoftware.com/home'},
+			data={
+				'utf8': '✓',
+				'authenticity_token': self.get_auth_token(),
+				'user[email]': user,
+				'user[password]': passwd,
+				'commit': 'SIGN IN',
+			},
 			timeout=5
 		)
-		if resp.status_code == requests.codes.forbidden:
-			raise HTTPError('Unsuccessful login', response=resp)
 		resp.raise_for_status()
+		if not resp.history[0].headers['Location'].endswith('/account'):
+			raise ShiftException('Unsuccessful login')
 
-		self.session.headers.update({'X-SESSION': resp.headers['X-SESSION-SET']})
-		return resp.json()
+		return True
 
-	@check_login
 	def get_codes(self):
 		"""get active codes from orcicorn.com"""
 
@@ -92,57 +108,34 @@ class Shift:
 	def redeem(self, code):
 		"""redeem shift code"""
 
-		resp = self.session.post(
-			f"https://api.2k.com/borderlands/code/{code}/redeem/{self.platform.value}",
-			headers={'Referer': 'https://borderlands.com/en-US/profile/'},
+		resp = self.session.get(
+			f"https://shift.gearboxsoftware.com/entitlement_offer_codes",
+			params={'code': code},
+			headers={
+				'Referer': 'https://shift.gearboxsoftware.com/rewards',
+				'X-Requested-With': 'XMLHttpRequest',
+			},
 			timeout=5
 		)
-		if resp.status_code == requests.codes.not_found:
-			return False, 'NO_SUCH_CODE'
-		if resp.status_code == requests.codes.precondition_failed:
-			raise ShiftException('Rate limit exceeded, try again later')
 		resp.raise_for_status()
-		resp = resp.json()
+		status = resp.text.strip()
 
-		sleep(resp['min_wait_milliseconds'] / 1000)
+		if 'does not exist' in status.lower():
+			return False, 'NO_SUCH_CODE'
 
-		try:
-			resp = self.session.get(
-				f"https://api.2k.com/borderlands/code/{code}/job/{resp['job_id']}",
-				headers={'Referer': 'https://borderlands.com/en-US/profile/'},
-				timeout=5
-			)
-			resp = resp.json()
-			return resp.get('success', False), next(iter(resp.get('errors', [])), 'UNKOWN_ERROR')
-
-		except Exception as err:
-			return False, str(err)
-
-	@check_login
-	def info(self, code):
-		"""get details for code"""
-
-		try:
-			resp = self.session.get(f"https://api.2k.com/borderlands/code/{code}/info", timeout=5)
-			resp.raise_for_status()
-			resp = resp.json()
-
-			return next((x for x in resp['entitlement_offer_codes'] if x['offer_service'] == self.platform.value), None)
-
-		except Exception:
-			return None
+		return True, resp.text.strip()
 
 	def logout(self):
 		"""logout and delete session"""
 
 		try:
-			if 'X-SESSION' in self.session.headers:
-				self.session.delete(
-					'https://api.2k.com/borderlands/users/me',
-					headers={'Referer': 'https://borderlands.com/en-US/'},
+			if '_session_id' in self.session.headers:
+				self.session.get(
+					'https://shift.gearboxsoftware.com/logout',
+					headers={'Referer': 'https://shift.gearboxsoftware.com/'},
 					timeout=5
 				)
-				del self.session.headers['X-SESSION']
+				del self.session.headers['_session_id']
 
 		except Exception:
 			pass
