@@ -1,5 +1,9 @@
 # BL-Shift
 
+> [!IMPORTANT]
+> This repo is now archived as shift.orcicorn.com has been shutdown.  
+> Please see this repo for a different solution: [ugoogalizer/autoshift](https://github.com/ugoogalizer/autoshift)
+
 ![Python >=3.6](https://img.shields.io/badge/python->=3.6-blue.svg)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![GitHub last commit](https://img.shields.io/github/last-commit/derekn/blshift/master.svg)](https://github.com/derekn/blshift/commits/master)
